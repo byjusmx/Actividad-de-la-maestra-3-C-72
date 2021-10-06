@@ -79,21 +79,21 @@ export default class TransactionScreen extends Component {
           var { bookName, studentName } = this.state;
           this.initiateBookIssue(bookId, studentId, bookName, studentName);
 
-          // For Android users only
-          ToastAndroid.show("Book issued to the student!", ToastAndroid.SHORT);
+          // Solo para usuarios Android
+          ToastAndroid.show("Libro emitido al alumno, ToastAndroid.SHORT);
 
-          // Alert.alert("Book issued to the student!");
+          // Alert.alert("Libro emitido al alumno");
         } else {
           var { bookName, studentName } = this.state;
           this.initiateBookReturn(bookId, studentId, bookName, studentName);
 
-          // For Android users only
+          // Solo para usuarios Android
           ToastAndroid.show(
-            "Book returned to the library!",
+            "Libro devuelto a la biblioteca",
             ToastAndroid.SHORT
           );
 
-          // Alert.alert("Book returned to the library!");
+          // Alert.alert("Libro devuelto a la biblioteca");
         }
       });
   };
@@ -127,7 +127,7 @@ export default class TransactionScreen extends Component {
   };
 
   initiateBookIssue = async (bookId, studentId, bookName, studentName) => {
-    //add a transaction
+    //agrega una transacción
     db.collection("transactions").add({
       student_id: studentId,
       student_name: studentName,
@@ -136,20 +136,20 @@ export default class TransactionScreen extends Component {
       date: firebase.firestore.Timestamp.now().toDate(),
       transaction_type: "issue"
     });
-    //change book status
+    //cambia el estado del libro
     db.collection("books")
       .doc(bookId)
       .update({
         is_book_available: false
       });
-    //change number  of issued books for student
+    //cambia el número de libros emitidos al alumno
     db.collection("students")
       .doc(studentId)
       .update({
         number_of_books_issued: firebase.firestore.FieldValue.increment(1)
       });
 
-    // Updating local state
+    // Actualiza el estado local
     this.setState({
       bookId: "",
       studentId: ""
@@ -157,7 +157,7 @@ export default class TransactionScreen extends Component {
   };
 
   initiateBookReturn = async (bookId, studentId, bookName, studentName) => {
-    //add a transaction
+    //agrega una transacción
     db.collection("transactions").add({
       student_id: studentId,
       student_name: studentName,
@@ -166,20 +166,20 @@ export default class TransactionScreen extends Component {
       date: firebase.firestore.Timestamp.now().toDate(),
       transaction_type: "return"
     });
-    //change book status
+    //cambia el estado del libro
     db.collection("books")
       .doc(bookId)
       .update({
         is_book_available: true
       });
-    //change number  of issued books for student
+    //cambia el número de libros emitidos al alumno
     db.collection("students")
       .doc(studentId)
       .update({
         number_of_books_issued: firebase.firestore.FieldValue.increment(-1)
       });
 
-    // Updating local state
+    // actualiza el estado local
     this.setState({
       bookId: "",
       studentId: ""
@@ -207,7 +207,7 @@ export default class TransactionScreen extends Component {
             <View style={styles.textinputContainer}>
               <TextInput
                 style={styles.textinput}
-                placeholder={"Book Id"}
+                placeholder={"Id del libro"}
                 placeholderTextColor={"#FFFFFF"}
                 value={bookId}
                 onChangeText={text => this.setState({ bookId: text })}
@@ -216,13 +216,13 @@ export default class TransactionScreen extends Component {
                 style={styles.scanbutton}
                 onPress={() => this.getCameraPermissions("bookId")}
               >
-                <Text style={styles.scanbuttonText}>Scan</Text>
+                <Text style={styles.scanbuttonText}>Escanear</Text>
               </TouchableOpacity>
             </View>
             <View style={[styles.textinputContainer, { marginTop: 25 }]}>
               <TextInput
                 style={styles.textinput}
-                placeholder={"Student Id"}
+                placeholder={"Id del alumno"}
                 placeholderTextColor={"#FFFFFF"}
                 value={studentId}
                 onChangeText={text => this.setState({ studentId: text })}
@@ -231,14 +231,14 @@ export default class TransactionScreen extends Component {
                 style={styles.scanbutton}
                 onPress={() => this.getCameraPermissions("studentId")}
               >
-                <Text style={styles.scanbuttonText}>Scan</Text>
+                <Text style={styles.scanbuttonText}>Escanear</Text>
               </TouchableOpacity>
             </View>
             <TouchableOpacity
               style={[styles.button, { marginTop: 25 }]}
               onPress={this.handleTransaction}
             >
-              <Text style={styles.buttonText}>Submit</Text>
+              <Text style={styles.buttonText}>Enviar</Text>
             </TouchableOpacity>
           </View>
         </ImageBackground>
